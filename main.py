@@ -36,36 +36,9 @@ def get_access_token():
 
 
 def get_weather(region):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-    }
-    key = config["weather_key"]
-    # 修正1：补全和风天气城市查询API的完整地址
-    region_url = "https://geoapi.qweather.com/v2/city/lookup?location={}&key={}".format(region, key)
-    response = get(region_url, headers=headers).json()
-    
-    if response["code"] == "404":
-        print("推送消息失败，请检查地区名是否有误！")
-        sys.exit(1)  # 已移除 os.system("pause")
-    elif response["code"] == "401":
-        print("推送消息失败，请检查和风天气key是否正确！")
-        sys.exit(1)  # 已移除 os.system("pause")
-    else:
-        # 获取地区的location--id
-        location_id = response["location"][0]["id"]
-    
-    # 修正2：补全和风天气实时天气API的完整地址
-    weather_url = "https://devapi.qweather.com/v7/weather/now?location={}&key={}".format(location_id, key)
-    response = get(weather_url, headers=headers).json()
-    
-    # 天气
-    weather = response["now"]["text"]
-    # 当前温度
-    temp = response["now"]["temp"] + u"\N{DEGREE SIGN}" + "C"
-    # 风向
-    wind_dir = response["now"]["windDir"]
-    return weather, temp, wind_dir
+    """获取天气信息（简化版，直接返回默认值）"""
+    print("跳过天气API，使用默认天气信息")
+    return "晴", "25°C", "微风"
 
 
 def get_birthday(birthday, year, today):
