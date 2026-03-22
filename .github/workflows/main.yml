@@ -5,9 +5,9 @@ on:
     - cron: '0 23 * * *'
 jobs:
   build:
-    runs-on: ubuntu-latest
-    env:  # 添加这个环境变量
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    runs-on: ubuntu-24.04  # 改为Ubuntu 24.04，默认支持Node.js 24
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # 强制使用Node.js 24
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
