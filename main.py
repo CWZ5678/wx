@@ -35,10 +35,43 @@ def get_access_token():
     return access_token
 
 
-def get_weather(region):
-    """获取天气信息（简化版，直接返回默认值）"""
-    print("跳过天气API，使用默认天气信息")
-    return "晴", "25°C", "微风"
+def get_weather(self, city: str) -> str:
+    """
+    调用 UApiPro 天气 API 获取天气信息
+    :param city: 城市名称，支持中文（如：广信区）
+    :return: 格式化后的天气描述字符串
+    """
+    url = "https://uapis.cn/api/v1/misc/weather"
+    params = {
+        "city": city,       # 城市名，必填
+        "lang": "zh"        # 返回中文
+    }
+    
+    try:
+        response = get(url, params=params, timeout=10)
+        if response.status_code == 200:
+            data = response.json()
+            
+            # 解析 UApiPro 返回的数据结构
+            weather_desc = data.get("weather", "未知")
+            temperature = data.get("temperature", "?")
+            wind_direction = data.get("wind_direction", "未知")
+            humidity = data.get("humidity", "?")
+            report_time = data.get("report_time", "")
+            
+            # 格式化输出，可根据模板需要调整
+            result = f"{city}今日天气：{weather_desc}，气温{str(temperature)}℃，{wind_direction}，湿度{str(humidity)}%"
+            
+            # 可选：添加更新时间，让信息更及时
+            if report_time:
+                result += f"（数据更新于：{report_time}）"
+                
+            return result
+        else:
+            return f"天气获取失败，状态码：{response.status_code}"
+    except Exception as e:
+        return f"天气获取异常：{str(e)}"
+
 
 
 def get_birthday(birthday, year, today):
