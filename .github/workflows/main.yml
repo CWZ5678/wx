@@ -1,24 +1,30 @@
-name: weixin
+name: Daily WeChat Reminder
+
 on:
-  workflow_dispatch:
-  schedule: 
+  workflow_dispatch: # 允许手动触发
+  schedule:
+    # UTC 23:00 运行，对应北京时间次日上午 7:00
     - cron: '0 23 * * *'
+
 jobs:
-  build:
-    runs-on: ubuntu-22.04  # 或 ubuntu-24.04，指定一个确定版本而非 latest
+  send-message:
+    runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # 提前切换到 Node.js 24 环境
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true # 提前使用 Node.js 24 环境，避免警告
+
     steps:
-      - uses: actions/checkout@v4
-      
-      - name: Set up Python
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python 环境
         uses: actions/setup-python@v5
         with:
-          python-version: 3.9.12
-      
-      - name: Install dependencies
+          python-version: '3.9'
+
+      - name: 安装依赖
         run: |
           python -m pip install --upgrade pip
-          pip install requests zhdate
-      - name: Run script
+          pip install -r requirements.txt
+
+      - name: 执行推送脚本
         run: python main.py
