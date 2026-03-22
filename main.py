@@ -121,7 +121,7 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
     year = localtime().tm_year
     month = localtime().tm_mon
     day = localtime().tm_mday
-    today = datetime.date(datetime(year=year, month=month, day=day))
+    today = date(year, month, day)  # 使用从 datetime 模块导入的 date 类
     week = week_list[today.isoweekday() % 7]
     # 获取在一起的日子的日期格式
     love_year = int(config["love_date"].split("-")[0])
@@ -129,7 +129,7 @@ def send_message(to_user, access_token, region_name, weather, temp, wind_dir, no
     love_day = int(config["love_date"].split("-")[2])
     love_date = date(love_year, love_month, love_day)
     # 获取在一起的日期差
-    love_days = str(today.__sub__(love_date)).split(" ")[0]
+    love_days = (today - love_date).days
     # 获取所有生日数据
     birthdays = {}
     for k, v in config.items():
